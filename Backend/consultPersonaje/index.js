@@ -12,7 +12,7 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// ✅ Swagger config
+
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
@@ -44,6 +44,42 @@ app.get("/personajes", async (req, res) => {
   try {
     const result = await db.query("SELECT * FROM personajes");
     res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: "Error al consultar la base de datos" });
+  }
+});
+/**
+ * @swagger
+ * /personajes/{id}:
+ *   get:
+ *     summary: Obtiene un personaje por su ID
+ *     tags: [Personajes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del personaje a consultar
+ *     responses:
+ *       200:
+ *         description: Personaje encontrado
+ *       404:
+ *         description: Personaje no encontrado
+ *       500:
+ *         description: Error al consultar la base de datos
+ */
+app.get("/personajes/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await db.query("SELECT * FROM personajes WHERE id = $1", [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Personaje no encontrado" });
+    }
+
+    res.json(result.rows[0]);
   } catch (error) {
     res.status(500).json({ error: "Error al consultar la base de datos" });
   }

@@ -14,7 +14,6 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// ✅ Swagger
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
