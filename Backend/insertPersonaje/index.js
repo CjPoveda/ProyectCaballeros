@@ -14,7 +14,7 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// Swagger
+// ✅ Swagger
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
@@ -30,6 +30,48 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Personaje:
+ *       type: object
+ *       required:
+ *         - nombre
+ *         - edad
+ *         - altura
+ *         - constelacion
+ *       properties:
+ *         nombre:
+ *           type: string
+ *         edad:
+ *           type: integer
+ *         altura:
+ *           type: number
+ *         constelacion:
+ *           type: string
+ *         imagen_url:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * /personaje:
+ *   post:
+ *     summary: Inserta un nuevo personaje
+ *     tags: [Personajes]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Personaje'
+ *     responses:
+ *       201:
+ *         description: Personaje insertado exitosamente
+ *       500:
+ *         description: Error al insertar personaje
+ */
 app.post("/personaje", async (req, res) => {
   const { nombre, edad, altura, constelacion, imagen_url } = req.body;
 
@@ -49,3 +91,4 @@ app.post("/personaje", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Insert corriendo en http://0.0.0.0:${PORT}`);
 });
+

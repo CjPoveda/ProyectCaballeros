@@ -12,7 +12,7 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// Swagger
+// ✅ Swagger config
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
@@ -28,6 +28,18 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
+/**
+ * @swagger
+ * /personajes:
+ *   get:
+ *     summary: Obtiene todos los personajes
+ *     tags: [Personajes]
+ *     responses:
+ *       200:
+ *         description: Lista de personajes
+ *       500:
+ *         description: Error al consultar la base de datos
+ */
 app.get("/personajes", async (req, res) => {
   try {
     const result = await db.query("SELECT * FROM personajes");
